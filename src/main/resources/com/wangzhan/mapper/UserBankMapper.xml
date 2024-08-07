@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhan.mapper.UserBankMapper">
+
+    <resultMap id="BaseResultMap" type="com.wangzhan.domain.UserBank" >
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="amount" property="amount" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,
+        user_id,
+        user_name,
+        amount
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.wangzhan.domain.UserBank">
+        INSERT INTO user_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != userId and '' != userId">
+                user_id,
+            </if>
+            <if test="null != userName and '' != userName">
+                user_name,
+            </if>
+            <if test="null != amount and '' != amount">
+                amount
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != userId and '' != userId">
+                #{userId},
+            </if>
+            <if test="null != userName and '' != userName">
+                #{userName},
+            </if>
+            <if test="null != amount and '' != amount">
+                #{amount}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM user_bank
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.wangzhan.domain.UserBank">
+        UPDATE user_bank
+        <set>
+            <if test="null != userId and '' != userId">user_id = #{userId},</if>
+            <if test="null != userName and '' != userName">user_name = #{userName},</if>
+            <if test="null != amount and '' != amount">amount = #{amount}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM user_bank
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM user_bank
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM user_bank
+    </select>
+    <select id="list" resultType="com.wangzhan.domain.UserBank" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM user_bank
+    </select>
+
+</mapper>
